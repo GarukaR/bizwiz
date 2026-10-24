@@ -1,10 +1,16 @@
 # BizWiz state
 
-_Last updated: 2026-10-25 (planning session)_
+_Last updated: 2026-10-25 (slice 1 session)_
 
 ## Where we are
 
-Planning is done: decisions in `PLAN.md`, Phase 1 split into issues #1–#16. **No code yet.**
+Planning is done: decisions in `PLAN.md`, Phase 1 split into issues #1–#16.
+
+**Slice 1 (#1) is built** on branch `slice-1-walking-skeleton` (PR open): ask a question in the web app,
+get an answer with a citation chip, click it to see the source passage with the quote highlighted.
+22 backend tests + 1 Playwright e2e test green. **Not merged yet: the real-API smoke test hasn't run**,
+because BizWiz has no Anthropic API key yet. Garuka: put `ANTHROPIC_API_KEY` in `.env`, then run
+`cd backend && uv run python scripts/smoke.py`. It must print `SMOKE OK` before merging.
 
 ## Order of work (Phase 1 = v1, target end of January 2027)
 
@@ -12,8 +18,8 @@ Claude's plumbing slices and Garuka's quests run **in parallel**. Quest 0 doesn'
 
 | Order | Issue | Who | Status |
 |---|---|---|---|
-| 1 | #1 Slice 1: walking skeleton | Claude | **next** |
-| 1 (parallel) | #4 Quest 0: warm-up + scoreboard | Claude builds tooling, Garuka plays | next. Tooling first, then stage 0a. |
+| 1 | #1 Slice 1: walking skeleton | Claude | built, PR open, needs smoke test |
+| 1 (parallel) | #4 Quest 0: warm-up + scoreboard | Claude builds tooling, Garuka plays | **next**. Tooling first, then stage 0a. |
 | 2 | #2 Slice 2: deploy | Claude | |
 | 3 | #3 Slice 3: Ironbark corpus + golden set + Eval page | Claude (Garuka hand-grades 10) | |
 | 4 | #5 Quest 1: Chunker | Garuka | needs #1, #3 |
@@ -40,6 +46,25 @@ Claude's plumbing slices and Garuka's quests run **in parallel**. Quest 0 doesn'
   documents in before #14.
 
 ## Notes for the next session
+
+- **Slice 1 layout.** Backend code is in `backend/bizwiz/` (flat, not `src/`): `domain.py` (types),
+  `seams.py` (the four Protocols), `pipeline.py` (`index_source`, `ask`), `fakes.py`, `wiring.py`
+  (the only place concrete classes are chosen), `api.py`. Naive placeholders are marked
+  `# replaced by Quest N`: `chunking.py` (Q1), `search_words.py` + `PostgresIndex.search` (Q2-4),
+  `SYSTEM_PROMPT` in `answerers/claude.py` (Q5).
+- **Seam details settled in slice 1** (small additions to PLAN.md section 8): `Index` also has
+  `get(passage_id)` for `GET /passages/{id}`; `Index.search` has no `filters` argument yet (add it with
+  permissions); `Source.list_changed(since)` exists but ingest always passes `None` (full re-index).
+- **Ports:** db 5442, API 8010, web 3010; the e2e run uses 8011/3011. Other projects on this machine
+  hold 8000, 5000, 3100 and 55437.
+- The API indexes `corpus/ironbark/` at start-up (idempotent: re-adding a document replaces its
+  chunks). #14 moves indexing into its own job.
+- The fake embedder is used for real until Quest 3; vectors are 8-dim hashes with
+  `model_id = fake-embedder-v0`. The `embedding` column is `vector` with no fixed size for now.
+- `ClaudeAnswerer` uses the beta Messages endpoint with `fallbacks="default"` (server-side refusal
+  fallback) and effort `medium`. Anthropic SDK is 2.3.
+- Integration tests use a separate `bizwiz_test` database (created by `db/init/`). If the db volume
+  existed before that script, create it by hand.
 
 - Local tools present: Docker 29, uv 0.11, Python 3.14 (uv can pin 3.12+), Node 24. No `psql`; use the
   Docker container.
