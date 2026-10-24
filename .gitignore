@@ -1,0 +1,23 @@
+# secrets
+.env
+.env.*
+!.env.example
+
+# private True Theorem eval set and data, never committed
+evals/private/
+data/private/
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+
+# node
+node_modules/
+.next/
+
+# playwright
+test-results/
+playwright-report/
