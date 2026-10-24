@@ -35,6 +35,25 @@ Every answer type gets golden questions: lookup, synthesis, numbers, freshness (
 wins), not in the documents (must say "couldn't find it"), and business-growth questions (best clients,
 win/loss reasons, revenue concentration).
 
+Starter questions for True Theorem's private eval. The answers belong only in `evals/private/`. Client
+names are left generic here.
+
+- **Lookup:** What payment milestones do we use? What's the starting price of the Dashboard package? What's in
+  the care plan and what does it cost? What did we propose to client X? What stack did we use for client X?
+- **Synthesis:** What do we promise about reply times across all documents? Which past projects involved IoT
+  or data pipelines? What risks did we flag in proposals? Summarise everything we know about client X.
+- **Numbers (Phase 4):** How much have we invoiced this financial year? Which invoices are unpaid? Total
+  quoted this year?
+- **Freshness:** What's our *current* founding-client discount? What's the latest version of our terms of
+  engagement, and what changed?
+- **Not in the documents:** What's our ABN (if no document has it)? What did client X pay in total? Who's our
+  accountant?
+- **Process:** Steps from a new lead to a signed project? What did the Zoho report recommend? Our standard
+  reply when a lead wants a call straight away?
+- **Growth:** Which service earns the most per hour? What do our best clients have in common? Why did we lose
+  the proposals we lost? What share of revenue comes from our biggest client? Which past clients haven't
+  heard from us in 3 months?
+
 ### 4. Knowledge boundary
 
 - BizWiz answers **only from your own data**. That is what makes "grounded" testable.
