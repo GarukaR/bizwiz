@@ -1,6 +1,6 @@
 # BizWiz state
 
-_Last updated: 2026-10-25 (slice 1 session)_
+_Last updated: 2026-10-28 (Quest 0 tooling session)_
 
 ## Where we are
 
@@ -12,6 +12,11 @@ get an answer with a citation chip, click it to see the source passage with the 
 because BizWiz has no Anthropic API key yet. Garuka: put `ANTHROPIC_API_KEY` in `.env`, then run
 `cd backend && uv run python scripts/smoke.py`. It must print `SMOKE OK` before merging.
 
+**Quest 0 (#4) tooling is built** on branch `quest-0-warmup`, stacked on the slice 1 branch (PR open,
+based on `slice-1-walking-skeleton`; GitHub retargets it to `main` when slice 1 merges).
+`uv run quest` works and all three warm-up stages are ready to play. **Garuka plays 0a, 0b, 0c next**,
+on the same branch, then answers the interview card in `stage_c/BRIEF.md`. The PR merges after that.
+
 ## Order of work (Phase 1 = v1, target end of January 2027)
 
 Claude's plumbing slices and Garuka's quests run **in parallel**. Quest 0 doesn't depend on any slice.
@@ -19,7 +24,7 @@ Claude's plumbing slices and Garuka's quests run **in parallel**. Quest 0 doesn'
 | Order | Issue | Who | Status |
 |---|---|---|---|
 | 1 | #1 Slice 1: walking skeleton | Claude | built, PR open, needs smoke test |
-| 1 (parallel) | #4 Quest 0: warm-up + scoreboard | Claude builds tooling, Garuka plays | **next**. Tooling first, then stage 0a. |
+| 1 (parallel) | #4 Quest 0: warm-up + scoreboard | Claude builds tooling, Garuka plays | tooling done; **Garuka plays 0a–0c next** |
 | 2 | #2 Slice 2: deploy | Claude | |
 | 3 | #3 Slice 3: Ironbark corpus + golden set + Eval page | Claude (Garuka hand-grades 10) | |
 | 4 | #5 Quest 1: Chunker | Garuka | needs #1, #3 |
@@ -46,6 +51,19 @@ Claude's plumbing slices and Garuka's quests run **in parallel**. Quest 0 doesn'
   documents in before #14.
 
 ## Notes for the next session
+
+- **Quest Mode layout.** `quests/` is its own small uv project (`quests/pyproject.toml`, only pytest).
+  The scoreboard is `quests/quest_tool/` (its own tests: `cd quests && uv run pytest`). Stages are found
+  by folder name, `quests/q<N>_<name>/stage_<x>/`, each with `BRIEF.md` (its first line is the title and
+  `**Clear reward:** N XP` sets the XP), `predict.py`, a skeleton with `# TODO`s, `test_<unique>.py`
+  (test and skeleton file names must be unique across all stages, since pytest imports them by bare
+  name), and `HINTS.md` (hints 1 and 2 only; Claude gives Hint 3 on request).
+- `uv run quest` clears a stage automatically the first time all its tests pass, adds its XP and
+  updates `progress.json`. Claude logs predictions and the interview card with `uv run quest award N`
+  (+10 per correct guess, +30 for the card). Streak = stages in a row cleared with no hints.
+- Quest 1+ tests will need the backend code (`bizwiz.chunking` etc.). When writing them, add
+  `bizwiz` as a path dependency in `quests/pyproject.toml` (`[tool.uv.sources]`, `../backend`).
+- Reference solutions for Quest 0 were checked in a scratchpad and deliberately not committed.
 
 - **Slice 1 layout.** Backend code is in `backend/bizwiz/` (flat, not `src/`): `domain.py` (types),
   `seams.py` (the four Protocols), `pipeline.py` (`index_source`, `ask`), `fakes.py`, `wiring.py`
