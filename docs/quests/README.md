@@ -3,6 +3,21 @@
 You write the RAG core. Each quest is one module, split into **30-minute stages**. A stage is done when its
 tests are green and committed, so you can stop after any stage without leaving anything half-broken.
 
+## Start here
+
+From the `quests` folder:
+
+```
+uv run quest              # run the current stage's tests and show the scoreboard
+uv run quest hint 1       # log a hint you used (1, 2 or 3)
+uv run quest award 10     # log XP (correct predictions, interview card)
+```
+
+Each stage lives in its own folder, e.g. `quests/q0_warmup/stage_a/`, with a `BRIEF.md` (start here),
+`predict.py` (level 1), the file with the `# TODO` gaps, its tests, and `HINTS.md` (hints 1 and 2).
+When every test in the stage is green, `uv run quest` clears it, adds the XP and moves you to the next
+stage. The streak counts stages in a row cleared without any hints.
+
 ## Levels inside a stage
 
 | Level | What you do |

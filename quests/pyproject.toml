@@ -1,0 +1,34 @@
+[project]
+name = "bizwiz-quests"
+version = "0.1.0"
+description = "Quest Mode: Garuka's stages, tests and the `quest` scoreboard."
+requires-python = ">=3.12"
+dependencies = ["pytest>=9.1.1"]
+
+[build-system]
+requires = ["uv_build>=0.11.13,<0.12.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = ""
+module-name = "quest_tool"
+
+[project.scripts]
+quest = "quest_tool:main"
+
+[tool.pytest.ini_options]
+# Plain `uv run pytest` checks the scoreboard tool only. Stages run through `uv run quest`.
+testpaths = ["quest_tool/tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.ruff.lint.per-file-ignores]
+# Sample data reads best as one row per line.
+"q*/**/test_*.py" = ["E501"]
+
+[tool.ruff.format]
+exclude = ["*.md", "q*/**/test_*.py"]
