@@ -11,8 +11,18 @@ a real business is unintended.
 
 ## Run it locally
 
-You need Docker, [uv](https://docs.astral.sh/uv/) and Node 24. Copy `.env.example` to `.env` first.
-Set `ANSWERER=fake` there to try it without an Anthropic API key.
+You need Docker Desktop (running), [uv](https://docs.astral.sh/uv/) and Node 24. Then, from the repo
+root in PowerShell:
+
+```
+.un.ps1
+```
+
+It starts the database, the API and the web app, and opens http://localhost:3010. Press Ctrl+C to
+stop. On the first run it creates `.env` from `.env.example`. With no `ANTHROPIC_API_KEY` in `.env` it
+uses the fake answerer (it quotes the best-matching document), so it works before you have a key.
+
+To run the pieces one at a time instead:
 
 | What | Command (from the repo root) |
 |---|---|
