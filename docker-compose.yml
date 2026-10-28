@@ -1,0 +1,19 @@
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: bizwiz
+      POSTGRES_PASSWORD: bizwiz
+      POSTGRES_DB: bizwiz
+    ports:
+      - "5442:5432"
+    volumes:
+      - bizwiz-db:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bizwiz"]
+      interval: 2s
+      retries: 15
+
+volumes:
+  bizwiz-db:
